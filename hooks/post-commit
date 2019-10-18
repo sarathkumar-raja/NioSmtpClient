@@ -1,0 +1,27 @@
+#!/usr/bin/python
+
+# place in .git/hooks/post-commit
+
+import commands, re
+
+print "checking for version change...",
+
+status, output = commands.getstatusoutput('git diff HEAD HEAD^ -U0')
+
+version_info = None
+
+for d in output.split("\n"):
+    rg = re.compile("\+VERSION\s?\=\s?\((?P<major>[0-9]+)\s?\,\s?(?P<minor>[0-9]+)\s?\,\s?(?P<rev>[0-9]+)\s?\)")
+    m  = rg.search(d)
+    if m:
+       version_info = m.groupdict()
+       break
+
+if version_info:
+    tag = "%s.%s.%s" % (version_info['major'], version_info['minor'], version_info['rev'])
+    status, output = commands.getstatusoutput('git tag -f %s' % tag)
+    if status:
+       raise Exception('tagging not successful: %s %s' % (output, status))
+    print "tagged revision: %s" % tag
+else:
+    print "none found."
