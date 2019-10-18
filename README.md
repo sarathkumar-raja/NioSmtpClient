@@ -5,6 +5,9 @@ High performance SMTP client in Java based on [Netty](https://netty.io/). This c
 
 ### Features
 
+
+
+
 - High performance, designed to handle many concurrent connections
 - Supports TLS, pipelining, chunking, `SIZE`, `SMTPUTF8`, and other ESMTP RFCs
 - Send from specific IP addresses
